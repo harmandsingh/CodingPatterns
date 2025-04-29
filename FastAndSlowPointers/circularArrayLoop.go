@@ -6,33 +6,49 @@ import (
 
 func circularArrayLoop(nums []int) bool {
 
-	fast, slow := 0, 0
-	for slow < len(nums) {
-		cycleLength := 0
-		fast = slow
-		for true {
-			cycleLength++
-			prev := nums[fast]
-			if prev < 0 {
-				fast = (fast - nums[fast]) % len(nums)
-				if nums[fast] > 0 {
-					break
-				}
-			} else {
-				fast = (fast + nums[fast]) % len(nums)
-				if nums[fast] < 0 {
-					break
-				}
+	for i := range nums {
+		// Initilize slow and fast pointers
+		slow, fast := i, i
+
+		// Set direction of pointer
+		forward := nums[i] > 0
+
+		for {
+			// Move slow pointer
+			slow = (slow + nums[slow]) % len(nums)
+			if slow < 0 {
+				slow += len(nums)
 			}
+			// Check if cycle does not exist
+			if forward != (nums[slow] > 0) || nums[slow]%len(nums) == 0 {
+				break
+			}
+
+			// Move fast pointer
+			fast = (fast + nums[fast]) % len(nums)
+			if fast < 0 {
+				fast += len(nums)
+			}
+			// Check if cycle does not exist
+			if forward != (nums[fast] > 0) || nums[fast]%len(nums) == 0 {
+				break
+			}
+
+			// Move fast pointer again
+			fast = (fast + nums[fast]) % len(nums)
+			if fast < 0 {
+				fast += len(nums)
+			}
+			// Check if cycle does not exist
+			if forward != (nums[fast] > 0) || nums[fast]%len(nums) == 0 {
+				break
+			}
+
+			// Check if slow and fast pointer values are equal
 			if slow == fast {
-				if cycleLength > 1 {
-					return true
-				} else if cycleLength == 1 {
-					break
-				}
+				return true
 			}
 		}
-		slow++
 	}
 	return false
 }
@@ -44,4 +60,8 @@ func main() {
 	fmt.Println(circularArrayLoop(nums2))
 	nums3 := []int{5, 4, -2, -1, 3}
 	fmt.Println(circularArrayLoop(nums3))
+	nums4 := []int{1, 2, -3, 3, 4, 7, 1}
+	fmt.Println(circularArrayLoop(nums4))
+	nums5 := []int{3, 3, 1, -1, 2}
+	fmt.Println(circularArrayLoop(nums5))
 }
